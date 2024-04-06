@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from '../assignment/HomeScreen';
 import CartScreen from '../assignment/CartScreen';
 import FavoritesScreen from '../assignment/FavoritesScreen';
-import LienHe from '../assignment/lienHe';
+import PersonalDetails from '../assignment/PersonalDetails';
 import Search from '../assignment/Search'
 
 
@@ -50,7 +50,7 @@ const Navigation = () => {
           tabBarIcon: ({ color, size }) => <Image source={require('../image/Vectorlocation.png')} tintColor={color} />
         }}
         name="     "
-        component={LienHe} />
+        component={PersonalDetails} />
     </Tab.Navigator>
   )
 }

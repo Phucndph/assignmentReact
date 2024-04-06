@@ -16,7 +16,7 @@ const ChonAnh=()=>{
         }
     };
     return(
-        <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+        <View style={{alignItems:'center',justifyContent:'center'}}>
             <Button title="Chon anh tu thu vien"
             onPress={pickImage}/>
             <Image source={{uri: selectedImage}}

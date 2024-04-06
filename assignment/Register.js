@@ -19,7 +19,7 @@ import {
     const addUser = async data => {
       try {
         const response = await axios.post(
-          'https://65623cdedcd355c08324aeda.mockapi.io/api/v1/User',
+          'https://660eb8d5356b87a55c4fe229.mockapi.io/User',
           data,
         );
         return response.data; // Trả về dữ liệu từ phản hồi
@@ -34,6 +34,26 @@ import {
     const [fullName, setName] = useState('');
     const [VisiblePass, setVisiblePass] = useState(false);
     const [VisibleRePass, setVisibleRePass] = useState(false);
+    const handleRegister = async () => {
+      if (pass !== RePass) {
+        ToastAndroid.show('Mật khẩu không khớp', ToastAndroid.SHORT);
+        return;
+      }
+  
+      const newData = {
+        fullName: fullName,
+        emailAddress: getEmail,
+        password: pass,
+      };
+  
+      try {
+        await addUser(newData);
+        ToastAndroid.show('Tạo tài khoản thành công', ToastAndroid.SHORT);
+        navigation.goBack();
+      } catch (error) {
+        ToastAndroid.show('Đã xảy ra lỗi', ToastAndroid.SHORT);
+      }
+    };
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView>
@@ -117,27 +137,12 @@ import {
           Terms & Conditions and Privacy Policy</Text>
           {/* Đăng Ký */}
           <View>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={async () => {
-                if (pass != RePass) {
-                  ToastAndroid.show('Sai mk', ToastAndroid.SHORT);
-                  return;
-                }
-  
-                // tạo mock api đẩy lên mock api
-                const newData = {
-                  fullName: fullName,
-                  emailAddress: getEmail,
-                  password: pass,
-                };
-  
-                await addUser(newData);
-                ToastAndroid.show('Tạo tài khoản thành công', ToastAndroid.SHORT);
-                navigation.goBack();
-              }}>
-              <Text style={styles.buttonText}>Đăng ký</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+        style={styles.button}
+        onPress={handleRegister}
+      >
+        <Text style={styles.buttonText}>Đăng ký</Text>
+      </TouchableOpacity>
           </View>
           <Text style={styles.but}>Hoặc</Text>
                     <View style={{flexDirection:'row', justifyContent:'space-evenly'}}>
@@ -194,7 +199,7 @@ import {
       marginTop: 60,
     },
     baseText: {
-      color: '#FFFFFF',
+      color: 'black',
       fontFamily: 'Cochin',
       textAlign: 'center',
       fontWeight: 'bold',
@@ -217,7 +222,7 @@ import {
     input1: {
       paddingStart: -2,
       width: '90%',
-      color: 'white',
+      color: 'black',
     },
     input: {
       alignItems: 'center',
@@ -225,7 +230,7 @@ import {
       borderWidth: 1,
       width: '100%',
       borderRadius: 8,
-      color: 'white',
+      color: 'black',
       marginTop: 20,
       paddingStart: 20,
       height: 50,
@@ -244,7 +249,7 @@ import {
     buttonText: {
       fontSize: 16,
       fontWeight: 'bold',
-      color: 'white',
+      color: 'black',
     },
     buttonGG: {
       flexDirection: 'row',
@@ -253,7 +258,7 @@ import {
       justifyContent: 'space-around',
     },
     buttonTextGG: {
-      color: '#000000',
+      color: 'black',
       paddingRight: 70,
     },
     googleImage: {
@@ -266,7 +271,7 @@ import {
       tintColor: 'gray',
     },
     textOrange: {
-      color: '#D17842',
+      color: 'black',
     },
   });
   

@@ -10,17 +10,30 @@ import {
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 const Login = () => {
+    const navigation = useNavigation();
     const [getemail, setemail] = useState('');
     const [pass, setPass] = useState('');
     const [getPassVisible, setPassVisible] = useState(false);
     const [data, setData] = useState([]);
     useEffect(() => {
         axios
-            .get('https://65c4f22adae2304e92e3b433.mockapi.io/user')
+            .get('https://660eb8d5356b87a55c4fe229.mockapi.io/User')
             .then(res => setData(res.data))
             .catch(err => console.log(err));
     }, []);
+    const handleRegister = () => {
+        navigation.navigate('Register'); // Chuyển hướng đến trang đăng ký khi nhấn vào nút "Đăng ký"
+    };
+    
+    const handleLogin = () => {
+        data.forEach(item => {
+            if (getemail === item.emailAddress && pass === item.password) {
+                navigation.navigate('Navigation');
+            }
+        });
+    };
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -76,13 +89,7 @@ const Login = () => {
                 <View>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => {
-                            data.forEach(item => {
-                                if (getemail === item.emailAddress && pass === item.password) {
-                                    navigation.navigate('Navigation');
-                                }
-                            });
-                        }}>
+                        onPress={handleLogin}>
                         <Text style={styles.buttonText}>Đăng nhập</Text>
                     </TouchableOpacity>
                     <Text style={styles.but}>Hoặc</Text>
@@ -109,12 +116,10 @@ const Login = () => {
                         {'\n\n'}
                         Bạn không có tài khoản
                         <TouchableOpacity
-                            onPress={() => {
-                                navigation.navigate('Register');
-                            }}>
+                            onPress={handleRegister} // Gọi hàm handleRegister khi nhấn vào nút "Đăng ký"
+                        >
                             <Text style={styles.textOrange}> Đăng ký</Text>
                         </TouchableOpacity>
-
                     </Text>
                 </View>
             </ScrollView>
@@ -143,7 +148,6 @@ const styles = StyleSheet.create({
     },
     baseText: {
         color: 'black',
-        fontFamily: 'Cochin',
         textAlign: 'center',
         fontWeight: 'bold',
         marginBottom: 17,
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     buttonTextGG: {
-        color: '#000000',
+        color: 'black',
         paddingRight: 70,
     },
     googleImage: {
@@ -213,9 +217,9 @@ const styles = StyleSheet.create({
     eyeImage: {
         width: 20,
         height: 20,
-        tintColor: 'gray',
+        tintColor: 'black',
     },
     textOrange: {
-        color: '#D17842',
+        color: 'black',
     }
 })

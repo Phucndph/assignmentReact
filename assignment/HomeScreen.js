@@ -30,6 +30,7 @@ const HomeScreen = () => {
 
   const handlePress = item => {
     setSelectedItem(item?.id);
+    navigation.navigate('Caytrong');
   };
 
   const handleType = (type) => {
@@ -37,22 +38,13 @@ const HomeScreen = () => {
 
     }
   }
-
+  const handle = () => {
+    navigation.navigate('ListCayTrong');
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Setting');
-          }}>
-        </TouchableOpacity>
-
-
-      </View>
-
-      {/* Flatlist do du lieu Xuất xứ của Coffee theo chiều ngang*/}
       <ScrollView>
-        <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text
             style={{
               fontSize: 28,
@@ -64,70 +56,71 @@ const HomeScreen = () => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('PersonalDetails');
+              navigation.navigate('CartScreen');
             }}>
-              <Image
-                style={styles.imgHeader}
-                source={require('../assets/buy.png')}
-              />
+            <Image
+              style={styles.imgHeader}
+              source={require('../assets/buy.png')}
+            />
           </TouchableOpacity>
         </View>
-        <View style={{ marginVertical: 20 }}>
+        <TouchableOpacity onPress={handle} style={{ marginVertical: 20 }}>
           <Text style={[styles.textBase, { fontSize: 18 }]}>Cây trồng</Text>
-        </View>
+        </TouchableOpacity>
 
         <FlatList
           horizontal={true}
           scrollEnabled={true}
           data={data}
           renderItem={({ item }) => (
-            <View style={styles.item}>
-              {/* Ảnh itemSanPham */}
-              <View style={styles.item_anh}>
-                <Image
-                  style={styles.item_anh_img}
-                  source={require('../assets/cay.png')}
-                />
+            <TouchableOpacity onPress={() => handlePress(item)}>
+              <View style={styles.item}>
+                {/* Ảnh itemSanPham */}
+                <View style={styles.item_anh}>
+                  <Image
+                    style={styles.item_anh_img}
+                    source={require('../assets/cay.png')}
+                  />
+                </View>
+                {/* Nội dung */}
+                <View>
+                  <Text style={[styles.textBase]}>
+                    {'\n'}
+                    Cây để bàn {'\n'}
+                    <Text style={{ fontSize: 10 }}>With FPT</Text>
+                  </Text>
+                </View>
               </View>
-              {/* Nội dung */}
-              <View>
-                <Text style={[styles.textBase]}>
-                  {'\n'}
-                  {item.name} {'\n'}
-                  <Text style={{ fontSize: 10 }}>{item.title}</Text>
-                </Text>
-
-              </View>
-            </View>
+            </TouchableOpacity>
           )}></FlatList>
 
-        <View style={{ marginVertical: 20 }}>
-          <Text style={[styles.textBase, { fontSize: 18 }]}>Cây cảnh</Text>
-        </View>
+        <TouchableOpacity onPress={handle} style={{ marginVertical: 20 }}>
+          <Text style={[styles.textBase, { fontSize: 18 }]}>Chậu Cây</Text>
+        </TouchableOpacity>
         <FlatList
           horizontal={true}
           scrollEnabled={true}
           data={data}
           renderItem={({ item }) => (
-            <View style={styles.item}>
-              {/* Ảnh itemSanPham */}
-              <View style={styles.item_anh}>
-                <Image
-                  style={styles.item_anh_img}
-                  source={require('../assets/cay.png')}
-                />
+            <TouchableOpacity onPress={() => handlePress(item)}>
+              <View style={styles.item}>
+                {/* Ảnh itemSanPham */}
+                <View style={styles.item_anh}>
+                  <Image
+                    style={styles.item_anh_img}
+                    source={require('../assets/cay.png')}
+                  />
+                </View>
+                {/* Nội dung */}
+                <View>
+                  <Text style={[styles.textBase]}>
+                    {'\n'}
+                    Cây để bàn {'\n'}
+                    <Text style={{ fontSize: 10 }}>With FPT</Text>
+                  </Text>
+                </View>
               </View>
-
-              {/* Nội dung */}
-              <View>
-                <Text style={[styles.textBase]}>
-                  {'\n'}
-                  {item.name} {'\n'}
-                  <Text style={{ fontSize: 10 }}>{item.title}</Text>
-                </Text>
-
-              </View>
-            </View>
+            </TouchableOpacity>
           )}></FlatList>
       </ScrollView>
     </SafeAreaView>

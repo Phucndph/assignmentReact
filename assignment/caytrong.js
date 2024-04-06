@@ -10,10 +10,27 @@ import {
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { addFa } from '../api/Favorite.api';
+import { useState } from 'react';
 
-const CoffeeDetailsScreen = () => {
+const Caytrong = ({ item }) => {
+  const [cartItems, setCartItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const navigation = useNavigation()
+  const handleAddToCart = (product) => {
+    setSelectedItem(product); // Cập nhật state selectedItem với thông tin sản phẩm được chọn
+    navigation.navigate('CartScreen');
+    const newItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1, // Số lượng ban đầu là 1
+      isChecked: false, // Trạng thái checkbox ban đầu là false
+      image: product.image, // URL hình ảnh sản phẩm
+    };
+
+    // Thêm mục mới vào mảng cartItems
+    setCartItems((prevItems) => [...prevItems, newItem]);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -23,7 +40,7 @@ const CoffeeDetailsScreen = () => {
             {/* anh san SanPham */}
             <Image
               style={[styles.item_img]}
-              source={require('../image/sp4.png')}
+              source={require('../assets/cay.png')}
             />
 
             {/* phan thong tin  */}
@@ -35,11 +52,11 @@ const CoffeeDetailsScreen = () => {
                       styles.textBase,
                       { fontSize: 20, fontWeight: 'bold' },
                     ]}>
-                    Cappuccino
+                    Cây Để Bàn
                   </Text>
                   <Text
                     style={[styles.textBase, { fontSize: 10, color: '#AEAEAE' }]}>
-                    With Steamed Milk
+                    With FPT
                   </Text>
                 </View>
 
@@ -51,19 +68,6 @@ const CoffeeDetailsScreen = () => {
                   }}>
                   <View style={styles.item_img_info_row_ic}>
                     <Image
-                      source={require('../image/coffee2.png')}
-                      tintColor={'#D17842'}
-                    />
-                    <Text
-                      style={[
-                        styles.textBase,
-                        { fontSize: 10, color: '#AEAEAE', textAlign: 'center' },
-                      ]}>
-                      Coffee
-                    </Text>
-                  </View>
-                  <View style={styles.item_img_info_row_ic}>
-                    <Image
                       source={require('../image/Vectorwater.png')}
                       tintColor={'#D17842'}
                     />
@@ -72,7 +76,7 @@ const CoffeeDetailsScreen = () => {
                         styles.textBase,
                         { fontSize: 10, color: '#AEAEAE', textAlign: 'center' },
                       ]}>
-                      Milk
+                      Ưa Nước
                     </Text>
                   </View>
                 </View>
@@ -101,20 +105,8 @@ const CoffeeDetailsScreen = () => {
                     (6,879)
                   </Text>
                 </View>
-                <View
-                  style={[
-                    styles.item_img_info_row_ic,
-                    { width: '80%', height: '65%', marginLeft: 15 },
-                  ]}>
-                  <Text
-                    style={[styles.textBase, { fontSize: 10, color: '#AEAEAE' }]}>
-                    Medium Roasted
-                  </Text>
-                </View>
               </View>
             </View>
-
-            {/* Nut yeu thich */}
             <View style={[styles.item_heart]}>
               <View
                 style={[
@@ -131,23 +123,12 @@ const CoffeeDetailsScreen = () => {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  newData = {
-                    name: "Cappuccino",
-                    title: "With Steamed Milk",
-                    price: "4.7",
-                    start: "4.8",
-                    type: "Cappuccino",
-                    favorite: true,
-                    imge: "sp1"
-                  }
-
-                  addFa(newData);
+                  navigation.navigate('CartScreen');
                 }}
-                style={[styles.item_img_info_row_ic, { width: 34, height: 34 }]}>
-                <Image
-                  source={require('../image/Vectorhear.png')}
-                  tintColor={'red'}
-                />
+              >
+                <View style={{ alignItems: 'center', justifyContent: 'center', width: 20, height: 20, borderRadius: 14 }}>
+                  <Image source={require('../image/buy.png')} tintColor={'black'} />
+                </View>
               </TouchableOpacity>
             </View>
           </View>
@@ -157,11 +138,11 @@ const CoffeeDetailsScreen = () => {
             <Text style={[styles.textBase]}>
               <Text
                 style={[{ color: '#AEAEAE', fontWeight: 'bold', fontSize: 16 }]}>
-                Description
+                Chú thích
               </Text>
-              {'\n'}Cappuccino is a latte made with more foam than
-              {'\n'}steamed milk, often with a sprinkle of cocoa
-              {'\n'}powder or cinnamon on top.
+              {'\n'}Là một loại cây ưa nước và ánh sáng
+              {'\n'}mặt trời rất thích hợp để trang trí bàn
+              {'\n'}làm việc.
             </Text>
           </View>
         </View>
@@ -170,17 +151,11 @@ const CoffeeDetailsScreen = () => {
             style={[
               { color: '#AEAEAE', fontWeight: 'bold', fontSize: 16, padding: 20 },
             ]}>
-            Size
+            Kích cỡ
           </Text>
           <View style={{ flexDirection: 'row' }}>
             <View style={styles.text_size}>
-              <Text style={{ color: 'white', fontSize: 20, padding: 5 }}>S</Text>
-            </View>
-            <View style={styles.text_size}>
-              <Text style={{ color: 'white', fontSize: 20, padding: 5 }}>M</Text>
-            </View>
-            <View style={styles.text_size}>
-              <Text style={{ color: 'white', fontSize: 20, padding: 5 }}>L</Text>
+              <Text style={{ color: 'white', fontSize: 20 }}>Nhỏ</Text>
             </View>
           </View>
         </View>
@@ -188,27 +163,66 @@ const CoffeeDetailsScreen = () => {
           <View>
             <Text
               style={{ color: 'white', marginLeft: 40, alignItems: 'center' }}>
-              Price
+              Giá
             </Text>
             <View style={styles.price}>
-              <Text style={[styles.price, { color: '#D17842', marginLeft: 20 }]}>
-                $
-              </Text>
               <Text style={[styles.price, { color: 'white', marginLeft: 10 }]}>
-                4.20
+                200000
               </Text>
             </View>
           </View>
-          <View>
-            <Text style={styles.cart}>Add to Cart</Text>
-          </View>
+          {cartItems.map((item) => (
+  // Kiểm tra xem item có tồn tại không trước khi truy cập thuộc tính id
+  item && (
+    <View key={item.id} style={styles.cartItemContainer}>
+      <TouchableOpacity
+        style={styles.checkbox}
+        onPress={() => handleCheckboxToggle(item.id)}
+      >
+        {item.isChecked && <Text>✓</Text>}
+      </TouchableOpacity>
+      <Image source={item.image} style={styles.image} />
+      <View style={styles.itemInfo}>
+        <Text style={styles.itemName}>{item.name}</Text>
+        <Text style={styles.itemPrice}>Giá: {item.price}</Text>
+        <Text style={styles.itemQuantity}>Số lượng: {item.quantity}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() =>
+              handleQuantityChange(item.id, item.quantity - 1)
+            }
+          >
+            <Text style={{ fontSize: 40 }}>-</Text>
+          </TouchableOpacity>
+          <Text style={{ fontSize: 25 }}>{item.quantity}</Text>
+          <TouchableOpacity
+            onPress={() =>
+              handleQuantityChange(item.id, item.quantity + 1)
+            }
+          >
+            <Text style={{ fontSize: 30 }}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => handleDeleteItem(item.id)}
+      >
+        <Text style={styles.deleteButtonText}>Xóa</Text>
+      </TouchableOpacity>
+    </View>
+  )
+))}
+          <TouchableOpacity onPress={() => handleAddToCart(item)}>
+            <Text style={styles.cart}>Chọn mua</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default CoffeeDetailsScreen;
+export default Caytrong;
 
 const styles = StyleSheet.create({
   container: {
@@ -280,11 +294,10 @@ const styles = StyleSheet.create({
   },
   text_size: {
     flexDirection: 'row',
-    borderWidth: 1,
     backgroundColor: '#141921',
     borderRadius: 10,
-    marginHorizontal: 16,
-    paddingHorizontal: 40,
+    marginHorizontal: 15,
+    paddingHorizontal: 35,
   },
   price: {
     flexDirection: 'row',

@@ -1,176 +1,178 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Button } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
-
 const PersonalDetails = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [editMode, setEditMode] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showAdditionalButtons, setShowAdditionalButtons] = useState(true);
   const navigation = useNavigation();
-  const [getPassVisible, setPassVisible] = useState(false);
+  const handleEditClick = () => {
+    setEditMode(true);
+    setShowAdditionalButtons(false);
+  };
+
+  const handleSaveClick = () => {
+    setEditMode(false);
+    setShowAdditionalButtons(true);
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setSelectedImage(result.uri);
+    }
+  };
+
+  const handle = () => {
+    navigation.navigate('Login');
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#141921',
-                width: 34,
-                height: 34,
-                borderRadius: 14,
-              }}>
-              <Image
-                source={require('../image/Vectorback.png')}
-                tintColor={'gray'}
-              />
-            </View>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Thông tin người dùng</Text>
+      {!editMode && (
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity style={styles.buttona} onPress={pickImage}>
+            <Text style={styles.buttonTexta}>Chọn ảnh từ thư viện</Text>
           </TouchableOpacity>
-          <View>
-            <Text
-              style={{
-                color: 'white',
-                marginLeft: 120,
-                fontSize: 25,
-                fontWeight: 'bold',
-              }}>
-              Setting
-            </Text>
-          </View>
+          {selectedImage && <Image source={{ uri: selectedImage }} style={styles.image} />}
         </View>
-        <View style={{ alignItems: 'center', marginTop: 40 }}>
-          <Image
-            style={{ width: 200, height: 200 }}
-            source={require('../image/ic_person.png')}
-          />
+      )}
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Tên:</Text>
+        {editMode ? (
+          <TextInput style={styles.input} value={name} onChangeText={setName} />
+        ) : (
+          <Text style={styles.text}>{name}</Text>
+        )}
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Email:</Text>
+        {editMode ? (
+          <TextInput style={styles.input} value={email} onChangeText={setEmail} />
+        ) : (
+          <Text style={styles.text}>{email}</Text>
+        )}
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Số điện thoại:</Text>
+        {editMode ? (
+          <TextInput style={styles.input} value={phone} onChangeText={setPhone} />
+        ) : (
+          <Text style={styles.text}>{phone}</Text>
+        )}
+      </View>
+      {showAdditionalButtons && (
+        <View style={{ marginTop: 10 }}>
+          <Text style={{ fontSize: 15, color: 'rgba(0, 0, 0, 0.5)' }}>Chung</Text>
+          <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.5)', flex: 1 }} />
         </View>
-        <View style={{ marginTop: 50 }}>
-          <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              placeholderTextColor={'#828282'}
-            />
+      )}
+      {editMode ? (
+        <TouchableOpacity style={styles.buttona} onPress={handleSaveClick}>
+          <Text style={styles.buttonTexta}>Lưu</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={handleEditClick}>
+          <Text style={styles.buttonText}>Chỉnh sửa thông tin</Text>
+        </TouchableOpacity>
+      )}
+
+      {showAdditionalButtons && (
+        <View>
+          <TouchableOpacity style={styles.button} onPress={() => console.log("Cẩm nang trồng cây")}>
+            <Text style={styles.buttonText}>Cẩm nang trồng cây</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => console.log("Lịch sử giao dịch")}>
+            <Text style={styles.buttonText}>Lịch sử giao dịch</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => console.log("Q & A")}>
+            <Text style={styles.buttonText}>Q & A</Text>
+          </TouchableOpacity>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ fontSize: 15, color: 'rgba(0, 0, 0, 0.5)' }}>Bảo mật và điều khoản</Text>
+            <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.5)', flex: 1 }} />
           </View>
-          <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Email-address"
-              placeholderTextColor={'#828282'}
-            />
-          </View>
-          <View style={styles.input}>
-            <TextInput
-              style={styles.input1}
-              placeholder="Password"
-              placeholderTextColor={'#828282'}
-            />
-            <TouchableOpacity onPress={() => setPassVisible(!getPassVisible)}>
-              {getPassVisible ? (
-                <Image
-                  source={require('../image/an.png')}
-                  style={styles.eyeImage}
-                />
-              ) : (
-                <Image
-                  source={require('../image/hien.png')}
-                  style={styles.eyeImage}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.input}>
-            <TextInput
-              style={styles.input1}
-              placeholder="Re-type password"
-              placeholderTextColor={'#828282'}
-            />
-            <TouchableOpacity onPress={() => setPassVisible(!getPassVisible)}>
-              {getPassVisible ? (
-                <Image
-                  source={require('../image/an.png')}
-                  style={styles.eyeImage}
-                />
-              ) : (
-                <Image
-                  source={require('../image/hien.png')}
-                  style={styles.eyeImage}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.button} onPress={() => console.log("Điều khoản và điều kiện")}>
+            <Text style={styles.buttonText}>Điều khoản và điều kiện</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => console.log("Chính sách và quyền riêng tư")}>
+            <Text style={styles.buttonText}>Chính sách và quyền riêng tư</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handle}>
+            <Text style={styles.buttonText}>Đăng xuất</Text>
+          </TouchableOpacity>
         </View>
-        <Text
-          style={{
-            color: 'white',
-            fontWeight: 'bold',
-            borderRadius: 15,
-            borderColor: 'white',
-            backgroundColor: '#D17842',
-            marginTop: 40,
-            padding: 15,
-            textAlign: 'center',
-            fontSize: 16,
-          }}>
-          Save
-        </Text>
-      </ScrollView>
-    </SafeAreaView>
+      )}
+    </View>
   );
 };
 
-export default PersonalDetails;
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#0C0F14',
-    height: '100%',
+    flex: 1,
     padding: 20,
   },
-  header: {
-    backgroundColor: '#0C0F14',
-    width: '100%',
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 20,
-    justifyContent: '',
+    marginBottom: 10,
   },
-  imgHeader: {
-    width: 34,
-    height: 34,
-    borderRadius: 12,
+  label: {
+    marginRight: 10,
+    fontWeight: 'bold',
   },
   input: {
-    alignItems: 'center',
-    borderColor: '#252A32',
+    flex: 1,
     borderWidth: 1,
-    width: '100%',
-    borderRadius: 8,
-    color: 'white',
+    borderColor: 'gray',
+    padding: 5,
+  },
+  text: {
+    flex: 1,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    marginBottom: 20,
+  },
+  button: {
+    borderRadius: 5,
     marginTop: 20,
-    paddingStart: 20,
-    height: 50,
-    flexDirection: 'row',
   },
-  eyeImage: {
-    width: 20,
-    height: 20,
-    tintColor: 'gray',
+  buttonText: {
+    color: 'black',
+    fontSize: 25,
   },
-  input1: {
-    paddingStart: -2,
-    width: '90%',
-    color: 'white',
+  buttona: {
+    borderRadius: 5,
+    backgroundColor: '#00ffff',
+    marginTop: 20,
+  },
+  buttonTexta: {
+    color: 'black',
+    fontSize: 25,
+    textAlign: 'center'
   },
 });
+
+export default PersonalDetails;

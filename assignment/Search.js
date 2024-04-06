@@ -1,65 +1,89 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const LienHe = () => {
-    const navigation = useNavigation();
+const Search = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { ListCayTrong } = route.params || {};
+
+  const [searchText, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearchTextChange = (text) => {
+    setSearchText(text);
+  };
+
+  const performSearch = () => {
+    if (ListCayTrong) {
+      const results = ListCayTrong.filter((item) =>
+        item.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setSearchResults(results);
+    }
+  };
+
+  const renderSearchResult = ({ item }) => {
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={{ borderRadius: 15, paddingVertical: 4, flexDirection: 'row', alignItems: 'center', backgroundColor: '#141921', marginBottom: 40 }}>
-                <TouchableOpacity>
-                    <View style={{ marginHorizontal: 25, alignItems: 'center', justifyContent: 'center' }}>
-                        <Image source={require('../image/Vectorsearch.png')} tintColor={'gray'} />
-                    </View>
-                </TouchableOpacity>
-                <TextInput placeholder='Search' placeholderTextColor='white' color='white' />
-            </View>
-        </SafeAreaView>
-    )
-}
+      <TouchableOpacity onPress={() => navigation.navigate('DetailScreen', { itemId: item.id })}>
+        <Text>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
-export default LienHe
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.searchContainer}>
+        <TouchableOpacity onPress={performSearch}>
+          <View style={styles.searchIconContainer}>
+            <Image source={require('../image/Vectorsearch.png')} style={styles.searchIcon} />
+          </View>
+        </TouchableOpacity>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Tìm kiếm"
+          placeholderTextColor="white"
+          color="white"
+          value={searchText}
+          onChangeText={handleSearchTextChange}
+        />
+      </View>
+      <FlatList
+        data={searchResults}
+        renderItem={renderSearchResult}
+        keyExtractor={(item) => item.id.toString()}
+      />
+    </SafeAreaView>
+  );
+};
+
+export default Search;
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        height: '100%',
-        padding: 20,
-    },
-    imgHeader: {
-        width: 34,
-        height: 34,
-        borderRadius: 12,
-    },
-    item: {
-        flexDirection: 'row',
-        backgroundColor: '#141921',
-        borderRadius: 15,
-        padding: 14,
-        alignItems: 'center',
-        marginLeft: 40,
-        marginRight: 40
-        // borderRadius: 28,
-        // backgroundColor: '#141921',
-        // padding: 14,
-        // marginRight: 100,
-
-    },
-    heading: {
-        fontSize: 15,
-        color: 'white'
-    },
-    image: {
-        width: 70,
-        height: 70,
-        marginRight: 1,
-        borderRadius: 5,
-    },
-    image_start: {
-        width: 10,
-        height: 10,
-        marginRight: 10,
-        marginTop: 5
-    },
-})
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 20,
+  },
+  searchContainer: {
+    borderRadius: 15,
+    paddingVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#141921',
+    marginBottom: 40,
+  },
+  searchIconContainer: {
+    marginHorizontal: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchIcon: {
+    tintColor: 'gray',
+  },
+  searchInput: {
+    flex: 1,
+    color: 'black',
+  },
+});
